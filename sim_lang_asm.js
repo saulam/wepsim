@@ -539,7 +539,7 @@ function simlang_compile (text, datosCU)
 	   context.pseudoInstructions	= new Array();
 	   context.stackRegister	= null ;
 
-           // ASK....
+           // return value...
            var ret = new Object(); 
            ret.seg = {
                        ".ktext": { name:".ktext",  begin:0x0000, end:0x0100, color: "#A9D0F5" },
@@ -549,53 +549,28 @@ function simlang_compile (text, datosCU)
                        ".stack": { name:".stack",  begin:0xFFFF, end:0xFFFF, color: "#F1F2A3" }
                      };
           ret.mp           = new Object() ;
-	  ret.labels	   = []; 	    // [name, verified]
+	  ret.labels	   = new Object() ; // {name, verified, ptr, bitstart, bitstop}
           ret.labels2      = new Object() ;
           ret.assembly     = new Object() ; // This is for the Assembly Debugger...
 
+          // 
+          // .segment
+          // ...
+          // 
+          
           nextToken(context) ;
           while (context.t < context.text.length)
           {
-	       // 
-	       // .kdata
-               // ...
-	       // 
-               if (isToken(context,".kdata"))
-               {
-                       read_data(context, datosCU, ret) ;
-               }
-
-	       // 
-	       // .ktext
-               // ...
-	       // 
+                    if (isToken(context,".kdata"))
+                        read_data(context, datosCU, ret) ;
                else if (isToken(context,".ktext"))
-               {
-                       read_text(context, datosCU, ret) ;
-               }
-
-	       // 
-	       // .data
-               // ...
-	       // 
+                        read_text(context, datosCU, ret) ;
                else if (isToken(context,".data"))
-               {
-                       read_data(context, datosCU, ret) ;
-               }
-
-	       // 
-	       // .text
-               // ...
-	       // 
+                        read_data(context, datosCU, ret) ;
                else if (isToken(context,".text"))
-               {
-                       read_text(context, datosCU, ret) ;
-	       }
-
+                        read_text(context, datosCU, ret) ;
                else
-               {
-                       return asmError(context, "Expected .data/.text/... segment but found '" + getToken(context) + "' as segment") ;
-               }
+                        return asmError(context, "Expected .data/.text/... segment but found '" + getToken(context) + "' as segment") ;
 
 	       // Check errors
 	       if (context.error != null) break;
@@ -603,7 +578,7 @@ function simlang_compile (text, datosCU)
 
          // TODO: to resolv the labels: tabla de definición de etiquetas (label2) y otra tabla de dónde se usan (pc, bitinicio,bitfin, ...)
 
-         ret.error = context.error ;  // ???
+         ret.error = context.error ;  
 	 return ret;
 }
 
