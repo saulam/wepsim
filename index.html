@@ -88,7 +88,8 @@
     <link  href="external/external.min.css" rel="stylesheet">
     <script src="external/external.min.js"></script>
     <script src="examples/examples.js"></script>
-    <script src="help/helps.js"></script>
+    <script src="help/help-en.js"></script>
+    <script src="help/help-es.js"></script>
     <script src="tutorials/welcome.js"></script>
 
     <script src="min.sim_all.js"></script>
@@ -141,7 +142,7 @@
 		          <li style="clear:none;width:50% !important">
                               <a id="tab24" href="#eltos_dbg"  
                                  onclick="stop_drawing(); 
-                                          var o1 = show_asmdbg_pc();
+                                          var o1 = fullshow_asmdbg_pc();
                                           var obj_byid = $('#asm_debugger_container');
                                           if (typeof o1[0] == 'undefined') 
                                               return;
@@ -1145,6 +1146,7 @@
                     $("#select1").val(get_cfg('ICON_theme')).selectmenu("refresh");
                     $("#select2").val(get_cfg('editor_mode')).selectmenu("refresh");
                     $("#select3").val(get_cfg('DBG_limitick')).selectmenu("refresh");
+                    $("#slider1").val(1000 / (get_cfg('DBG_delay')+0.01)).slider("refresh");
                     $("#img_select1").attr("src","images/stop_" + get_cfg('ICON_theme') + ".gif");
                     set_cpu_cu_size('#eltos_cpu_a','#eltos_cpu_b',get_cfg('CPUCU_size'));
                     $("#slider2").val(get_cfg('CPUCU_size')).slider("refresh");
