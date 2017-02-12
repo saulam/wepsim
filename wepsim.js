@@ -303,7 +303,14 @@
                                         $('#help1').popup('open');
                                     });
 
-            ga('send', 'event', 'help', 'help.' + ab1, 'help.' + ab1 + ".*");
+            ga('send', 'event', 'help', 'help.' + ab1, 'help.' + ab1 + '.*');
+            return ;
+        }
+
+        var cod1 = $('#help1_ref').data('code') ;
+        if ( (typeof cod1 != "undefined") && (cod1 == "true") )
+        {
+            ga('send', 'event', 'help', 'help.code', 'help.code.*');
             return ;
         }
 
@@ -318,6 +325,9 @@
 	$('#iframe_help1').enhanceWithin() ;
 
 	$('#help1_ref').data('relative','') ;
+	$('#help1_ref').data('absolute','') ;
+	$('#help1_ref').data('code','false') ;
+
 	$('#help1').trigger('updatelayout') ;
 	$('#help1').popup('open') ;
     }
@@ -327,7 +337,10 @@
         $('#iframe_help1').html(content) ;
         $('#iframe_help1').enhanceWithin() ;
 
-        $('#help1_ref').data('relative','') ;
+        $('#help1_ref').data('relative', '') ;
+	$('#help1_ref').data('absolute', '') ;
+	$('#help1_ref').data('code','true') ;
+
         $('#help1').trigger('updatelayout') ;
         $('#help1').popup('reposition', {positionTo: 'window'}) ;
         $('#help1').popup('open') ;
@@ -341,11 +354,15 @@
     function wepsim_help_set_relative ( rel )
     {
         $('#help1_ref').data('relative', rel) ;
+	$('#help1_ref').data('absolute','') ;
+	$('#help1_ref').data('code','false') ;
     }
 
     function wepsim_help_set_absolute ( ab1 )
     {
+        $('#help1_ref').data('relative','') ;
         $('#help1_ref').data('absolute', ab1) ;
+	$('#help1_ref').data('code','false') ;
     }
 
 
@@ -421,6 +438,8 @@
 	return true ;
     }
 
+    var max_turbo = 5 ;
+
     function wepsim_execute_chainplay ( btn1 )
     {
 	if (DBG_stop) {
@@ -430,33 +449,47 @@
 
         var clklimit = get_cfg('DBG_limitick') ;
 
-	var ret = false ;
-	if (get_cfg('DBG_level') == "instruction")
-	     ret = execute_microprogram(clklimit) ;
-	else ret = execute_microinstruction() ;
+        var turbo = 1;
+	if (get_cfg('DBG_delay') < 5)
+            turbo = max_turbo ;
 
-	if (ret === false) {
-	    wepsim_execute_stop(btn1) ;
-	    return ;
-	}
+        if (max_turbo == 5) 
+            var t0 = performance.now() ;
+        for (var i=0; i<turbo; i++)
+        {
+		var ret = false ;
+		if (get_cfg('DBG_level') == "instruction")
+		     ret = execute_microprogram(clklimit) ;
+		else ret = execute_microinstruction() ;
 
-        ret = wepsim_check_stopbybreakpoint_asm() ;
-	if (ret == true) {
-	    wepsim_execute_stop(btn1) ;
-	    return ;
-	}
+		if (ret === false) {
+		    wepsim_execute_stop(btn1) ;
+		    return ;
+		}
 
-        ret = wepsim_check_stopbybreakpoint_firm() ;
-	if (ret == true) {
-	    wepsim_execute_stop(btn1) ;
-	    return ;
-	}
+		ret = wepsim_check_stopbybreakpoint_asm() ;
+		if (ret == true) {
+		    wepsim_execute_stop(btn1) ;
+		    return ;
+		}
 
-        ret = wepsim_check_stopbynotify_firm() ;
-	if (ret == true) {
-	    wepsim_execute_stop(btn1) ;
-	    return ;
-	}
+		ret = wepsim_check_stopbybreakpoint_firm() ;
+		if (ret == true) {
+		    wepsim_execute_stop(btn1) ;
+		    return ;
+		}
+
+		ret = wepsim_check_stopbynotify_firm() ;
+		if (ret == true) {
+		    wepsim_execute_stop(btn1) ;
+		    return ;
+		}
+        }
+        if (max_turbo == 5) 
+            var t1 = performance.now() ;
+
+        if (max_turbo == 5) 
+            max_turbo = 250*5/(t1-t0) ;
 
 	setTimeout(wepsim_execute_chainplay, get_cfg('DBG_delay'), btn1) ;
     }

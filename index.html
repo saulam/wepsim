@@ -165,14 +165,14 @@
 			     </div>
 			     <div class="ui-grid-a">
 				<div class="ui-block-a" id="eltos_cpu_a" style="padding:0 0 0 0; width:60%">
-				    <object id="svg_p" data="images/processor6.svg" type="image/svg+xml">
+				    <object id="svg_p" data="images/processor6.svg" type="image/svg+xml" style="transform:translate3d(0,0,0);">
 					Your browser doesn't support SVG
 				    </object>
 				    <img alt="fire" id="internalbus_fire" src="images/fire.gif" height=50 style="position:absolute; top:55%; left:5%;  display:none;">
 				    <img alt="fire" id="databus_fire"     src="images/fire.gif" height=50 style="position:absolute; top:23%; left:25%; display:none;">
 				</div>
 				<div class="ui-block-b" id="eltos_cpu_b" style="padding:0 0 0 0; width:40%">
-				    <object id="svg_cu" data="images/controlunit6.svg" type="image/svg+xml">
+				    <object id="svg_cu" data="images/controlunit6.svg" type="image/svg+xml" style="transform:translate3d(0,0,0);">
 					Your browser doesn't support SVG
 				    </object>
 				</div>
@@ -190,18 +190,18 @@
 		   <div data-role="popup" id="checkboxespopup">
 		       <label><input aria-label="Show breakpoint"         type="checkbox" value="1" id="asm_break"  name="asm_break" checked="checked"><span>breakpoints</span></label>
 		       <label><input aria-label="Show address"            type="checkbox" value="1" id="asm_addr"   name="asm_addr"  checked="checked"><span>address</span></label>
-		       <label><input aria-label="Show label"              type="checkbox" value="1" id="asm_label1" name="asm_label1" checked="checked"><span>labels</span></label>
-		       <label><input aria-label="Show instruction"        type="checkbox" value="1" id="asm_ins"    name="asm_ins"   checked="checked"><span>assembly</span></label>
 		       <label><input aria-label="Show label"              type="checkbox" value="1" id="asm_label2" name="asm_label2" checked="checked"><span>labels</span></label>
 		       <label><input aria-label="Show pseudo-instruction" type="checkbox" value="1" id="asm_pins"   name="asm_pins"  checked="checked"><span>pseudo</span><span class="hidden-xs">-instructions</span></label>
+		       <label><input aria-label="Show label"              type="checkbox" value="1" id="asm_label1" name="asm_label1" checked="checked"><span>labels</span></label>
+		       <label><input aria-label="Show instruction"        type="checkbox" value="1" id="asm_ins"    name="asm_ins"   checked="checked"><span>assembly</span></label>
 		   </div>
 		   </th>
 			   <th width=10% class="asm_break"><span>break</span><span class="hidden-xs"><small>points</small></span></th>
 			   <th width=15% class="asm_addr"><span>addr</span><span class="hidden-xs">ess</span></th>
-                           <th width=10% class="asm_label1" align=right><span>labels</span></th>
-                           <th width=25% class="asm_ins"    align=left><span>assembly</span></th>
                            <th width=10% class="asm_label2" align=right><span>labels</span></th>
                            <th width=20% class="asm_pins"   align=left><span>pseudo</span><span class="hidden-xs"><small>instructions</small></span></th>
+                           <th width=10% class="asm_label1" align=right><span>labels</span></th>
+                           <th width=25% class="asm_ins"    align=left><span>assembly</span></th>
 			   </tr>
 			   </thead>
 			   </table>
