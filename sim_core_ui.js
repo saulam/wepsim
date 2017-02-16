@@ -279,16 +279,30 @@
                 return valuec ;
         }
 
+        function pack5 ( val )
+        {
+            return "00000".substring(0, 5 - val.length) + val ;
+        }
+
+        function pack8 ( val )
+        {
+            return "00000000".substring(0, 8 - val.length) + val ;
+        }
+
+        function pack32 ( val )
+        {
+            return "00000000000000000000000000000000".substring(0, 32 - val.length) + val;
+        }
+
         function hex2bin   ( hexvalue )
         {
                 var valuebin = hexvalue.toString(2) ;
 
-                valuebin = "00000000000000000000000000000000".substring(0, 32 - valuebin.length) + valuebin;
+                valuebin = pack32(valuebin) ;
                 valuebin = valuebin.substring(0,4)   + " " + valuebin.substring(4,8)   + " " +
                            valuebin.substring(8,12)  + " " + valuebin.substring(12,16) + " " +
                            valuebin.substring(16,20) + " " + valuebin.substring(20,24) + " " +
                            valuebin.substring(24,28) + " " + valuebin.substring(28,32) ;
-                //valuebin = valuebin.replace('0','.') ;
 
                 return valuebin ;
         }
@@ -329,7 +343,7 @@
 		var valuef   = hex2float(valueui);
                 var valuebin = hex2bin(valueui);
                 var valuehex = valueui.toString(16).toUpperCase() ;
-                    valuehex = "0x" + "00000000".substring(0, 8 - valuehex.length) + valuehex;
+                    valuehex = "0x" + pack8(valuehex) ;
 
 		var valuedt = "" ;
 		if (get_cfg('is_editable') == true) {
@@ -417,7 +431,7 @@
             {
                  var br_value = (get_value(sim_states['BR'][index]) >>> 0).toString(get_cfg('RF_display_format')).toUpperCase() ;
                  if (16 == get_cfg('RF_display_format'))
-                     br_value = "00000000".substring(0, 8 - br_value.length) + br_value ;
+                     br_value = pack8(br_value) ;
 
                  $("#tbl_RF" + index).html(br_value);
 	    }
@@ -520,7 +534,7 @@
                 if (sim_eltos[key].nbits > 1) {
                         value = (sim_states[key].value >>> 0).toString(get_cfg('RF_display_format')).toUpperCase() ;
                     if (16 == get_cfg('RF_display_format'))
-                        value = "00000000".substring(0, 8 - value.length) + value ;
+                        value = pack8(value) ;
                 }
 
 		var obj = document.getElementById("tbl_" + key);
@@ -733,20 +747,29 @@
          */
 
         var show_main_memory_deferred = null;
+        var show_main_memory_redraw   = false;
 
         function show_main_memory ( memory, index, redraw, updates )
         {
             // if ($("#memory_MP").is(":visible") == false)
             //     return ;
 
+            if (get_cfg('DBG_delay') > 5) 
+                show_main_memory_redraw  = redraw || show_main_memory_redraw ;
+
             if (null != show_main_memory_deferred)
                 return;
 
-            show_main_memory_deferred = setTimeout(function () {
-						        if (redraw == false)
-						    	     light_refresh_main_memory(memory, index, updates);
-                                                        else  hard_refresh_main_memory(memory, index, updates) ;
+            show_main_memory_redraw = redraw ;
+            show_main_memory_deferred = setTimeout(function () 
+                                                   {
+						        if (show_main_memory_redraw == false)
+						    	    light_refresh_main_memory(memory, index, updates);
+                                                        else hard_refresh_main_memory(memory, index, updates) ;
+
                                                         show_main_memory_deferred = null;
+                                                        show_main_memory_updates  = false;
+
                                                    }, cfg_show_main_memory_delay);
         }
 
@@ -754,40 +777,55 @@
         {
 	    var o1 = "" ;
             var value = "" ;
+            var sname = "" ;
 
             var valkeys = new Array();
 
-            // todo: move next 4 lines to the end of the assembler parser
+            // todo: move next block to the end of the assembler parser
             var SIMWARE = get_simware() ;
-            var revlabels = new Object();
+            var revlabels = new Object() ;
             for (var key in SIMWARE.labels2)
-                 revlabels[SIMWARE.labels2[key]] = key;
+                 revlabels[SIMWARE.labels2[key]] = key ;
+            var seglabels = new Object() ;
+	    for (skey in segments)
+                 seglabels[parseInt(segments[skey].begin)] = skey ;
 
             for (var key in memory)
             {
                 value = main_memory_getword(revlabels, valkeys, memory, key) ;
 
-		for (skey in segments) {
-		     if (parseInt(segments[skey].begin) == parseInt(key))
-			 o1 += "</tbody>" + "<tbody id=begin_" + skey + ">";
-		}
+                sname = seglabels[parseInt(key)] ;
+                if (typeof sname != "undefined")
+		    o1 += "</tbody><tbody id=begin" + sname.replace(".","_") + ">";
+
+                if (typeof sname != "undefined")
+                     taddr = '<span class="label label-default" ' + 
+                             '      style="position:relative;top:-10px;right:0px;">' + sname + '</span>' +
+                             '<small>0x</small>' + pack5(valkeys[3]) + ' - ' + 
+                             '<span style="border:1px solid gray;">' + '<small>0x</small>' + pack5(valkeys[0]) + '</span>' ;
+                else taddr = '<small>0x</small>' + pack5(valkeys[3]) + ' - ' + '<small>0x</small>' + pack5(valkeys[0]) ;
 
 		if (key == index)
 		     o1 += "<tr id='addr" + key + "'" +
-                           "    style='color:blue;  font-size:small; font-weight:bold'>" +
-			   "<td width=50%>" + "0x" + valkeys[3] + "-" + valkeys[0] + "</td>" +
-			   "<td id='mpval" + key + "'>" + value + "</td></tr>" ;
+                           "    style='color:blue; font-size:small; font-weight:bold'>" +
+			   "<td style='width:30%; min-width:150px;' align='right'>" + taddr + "</td>" + 
+			   "<td width='5%'               align='center'>&nbsp;</td>" + 
+                           "<td id='mpval" + key + "'>" + value + "</td>" + 
+                           "</tr>" ;
 		else o1 += "<tr id='addr" + key + "'" +
                            "    style='color:black; font-size:small; font-weight:normal'>" +
-			   "<td width=50%>" + "0x" + valkeys[3] + "-" + valkeys[0] + "</td>" +
-			   "<td id='mpval" + key + "'>" + value + "</td></tr>" ;
+			   "<td style='width:30%; min-width:150px;' align='right'>" + taddr + "</td>" + 
+			   "<td width='5%'               align='center'>&nbsp;</td>" + 
+                           "<td id='mpval" + key + "'>" + value + "</td>" + 
+                           "</tr>" ;
             }
 
 	    if (typeof memory[index] == "undefined")
 		o1 += "<tr>" +
-		      "<td width=15%><font style='color:blue; font-size:small; font-weight:bold'>0x" + 
+		      "<td style='width:30%;min-width:150px;' align='right'><font style='color:blue;font-size:small;font-weight:bold'>0x" + 
                       parseInt(index).toString(16) + 
                       "</font></td>" +
+	              "<td width='5%' align='center'>&nbsp;</td>" + 
 		      "<td><font style='color:blue; font-size:small; font-weight:bold'><b>00 00 00 00</b></font></td></tr>";
 
             $("#memory_MP").html("<center><table class='table table-hover table-condensed table-responsive'>" +
@@ -811,7 +849,7 @@
                     return "00 00 00 00" ;
 
 		var value  = memory[key].toString(16) ;
-		    value  = "00000000".substring(0, 8 - value.length) + value ;
+		    value  = pack8(value) ;
 
                 var i = 0;
                 for (i=0; i<4; i++) {
@@ -904,7 +942,8 @@
 
                 maddr = "0x" + parseInt(key).toString(16) ;
                 if (typeof revlabels[key] != "undefined")
-                    maddr = '<span class="label label-primary" style="position:relative;float:left;top:5px;right:8px;">' + revlabels[key] + '</span>' +
+                    maddr = '<span class="label label-primary" ' + 
+                            '      style="position:relative;top:-10px;right:0px;">' + revlabels[key] + '</span>' +
                             '<span style="border:1px solid gray;">' + maddr + '</span>' ;
 
 		trpin = "&nbsp;" ;
@@ -937,8 +976,8 @@
             }
 
             $("#memory_MC").html("<center><table class='table table-hover table-condensed table-responsive'>" +
-                                      "<tbody id=none>" + o1 + "</tbody>" +
-                                      "</table></center>");
+                                 "<tbody id=none>" + o1 + "</tbody>" +
+                                 "</table></center>");
 
             // scroll up/down to index element...
 	    var obj_byid = $('#maddr' + index) ;
