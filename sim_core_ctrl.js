@@ -671,15 +671,22 @@
             MC_dashboard = new Object() ;
             for (var i=0; i<SIMWARE['firmware'].length; i++)
 	    {
+               var elto_notify = new Array() ;
+               var elto_break  = false ;
 	       var last = SIMWARE['firmware'][i]["microcode"].length ; // mc = microcode
                var mci  = SIMWARE['firmware'][i]["mc-start"] ;
 	       for (var j=0; j<last; j++)
 	       {
 		    var comment = SIMWARE['firmware'][i]["microcomments"][j] ;
 		    MC[mci]     = SIMWARE['firmware'][i]["microcode"][j] ;
-		    MC_dashboard[mci] = { comment: comment,
-                                          breakpoint: false,
-                                          notify: comment.trim().split("notify:") } ;
+
+                    elto_break = (comment.trim().split("break:").length > 1) ;
+                    elto_notify = comment.trim().split("notify:") ;
+		    for (var k=0; k<elto_notify.length; k++) {
+		         elto_notify[k] = elto_notify[k].split('\n')[0] ;
+                    }
+
+		    MC_dashboard[mci] = { comment: comment, breakpoint: elto_break, notify: elto_notify } ;
 		    mci++;
 	       }
 	    }
@@ -863,8 +870,16 @@
                                  ' <form class="form-horizontal" style="white-space:wrap;overflow-y:auto;max-height:32vh;">' +
                                  ' <textarea aria-label="checks to perform" ' +
                                  '           placeholder="' + txt_placeholder + '"' +
-                                 '           id="end_state" name="end_state" ' + 
-                                 '           class="form-control input-md" rows="5">' + txt_checklist + '</textarea>' +
+                                 '           id="end_state" ' + 
+			         '           name="end_state" ' + 
+                                 '           data-allowEditing="true" ' +
+                                 '           data-allowPasting="true" ' +
+                                 '           data-limit="0" ' +
+                                 '           data-createTokensOnBlur="false" ' +
+                                 '           data-delimiter=";" ' +
+                                 '           data-beautify="true" ' +
+                                 '           class="form-control input-xs" rows="5">' + txt_checklist + '</textarea>' +
+                           //A1/ '           class="form-control input-xs speech-input" rows="5">' + txt_checklist + '</textarea>' +
                                  ' </form>' +
                                  ' </div>' +
 			         '<br>' +
@@ -917,7 +932,7 @@
                                  var msg = "<span style='background-color:#7CFC00'>Meets the specified requirements</span>" ;
                             else var msg = wepsim_checkreport2html(obj_result.result, true) ;
                             $('#check_results').html(msg);
-                            ga('send', 'event', 'state', 'state.check', 'state.check.' + msg);
+                            ga('send', 'event', 'state', 'state.check', 'state.check.' + obj_result.errors);
 
                             return false;
 		        }
@@ -939,19 +954,17 @@
                         animate: false
 	             });
 
-            // testing: tokenfield:
+            // tokenfield:
             chkbox.init(function() {
                             $('#end_state').tokenfield({
                                     autocomplete: { source: ['register','memory','screen'], delay: 100 },
                                     showAutocompleteOnFocus: true,
-                                    allowEditing: true,
-                                    allowPasting: true,
-                                    limit: 0,
-                                    createTokensOnBlur: false,
-                                    delimiter: ';',
-                                    beautify: true,
                                     inputType: 'textarea'
                             }) ;
+
+		            //A1/ var inputEls = document.getElementById('end_state');
+		            //A1/ if (null != inputEls)
+		            //A1/     setup_speech_input(inputEls) ;
                        });
 
 	    return chkbox;
@@ -962,13 +975,14 @@
 	    var chkbox = null ;
 
             var txt_checklist = wepsim_dump_checklist();
-	    ga('send', 'event', 'state', 'state.dump', 'state.dump.' + txt_checklist);
+
+	    var s=0 ;
+            for(var i=0; i<txt_checklist.length; i++)
+		if (';' == txt_checklist[i]) s++ ;
+	    ga('send', 'event', 'state', 'state.dump', 'state.dump.' + s);
 
 	    var dialog_title   = get_dialog_title('State', 'help_dumper') ;
-	    var dialog_message = get_dialog_message(dlg_title, 
-		                                    'Current state as requirement list.', 
-		                                    txt_checklist,
-		                                    "<span style='background-color:yellow'>Current state dumped.</span>") ;
+	    var dialog_message = get_dialog_message(dlg_title, 'Default...', txt_checklist, '') ;
             var dialog_btns = new Object() ;
                 dialog_btns["ok"] = {
 	    	        label: '&nbsp;&nbsp;OK&nbsp;&nbsp;',
@@ -985,19 +999,17 @@
                         animate: false
 	             });
 
-            // testing: tokenfield:
+            // tokenfield:
             chkbox.init(function() {
                             $('#end_state').tokenfield({
                                     autocomplete: { source: ['register','memory','screen'], delay: 100 },
                                     showAutocompleteOnFocus: true,
-                                    allowEditing: true,
-                                    allowPasting: true,
-                                    limit: 0,
-                                    createTokensOnBlur: false,
-                                    delimiter: ';',
-                                    beautify: true,
                                     inputType: 'textarea'
                             }) ;
+
+		            //A1/ var inputEls = document.getElementById('end_state');
+		            //A1/ if (null != inputEls)
+		            //A1/     setup_speech_input(inputEls) ;
                        });
 
 	    return chkbox;
