@@ -932,7 +932,16 @@
 	inputfirm.setValue("Please wait...");
 	inputfirm.refresh();
 
-	var url     = "examples/exampleMicrocode" + example_id + ".txt?time=" + getURLTimeStamp() ;
+	var mode = get_cfg('ws_mode');
+	if ('webmips' == mode) {
+	    var url = "examples/exampleMicrocodeMIPS.txt?time=" + getURLTimeStamp() ;
+	    inputfirm.setOption('readOnly', true);
+        }
+	else {
+	    var url = "examples/exampleMicrocode" + example_id + ".txt?time=" + getURLTimeStamp() ;
+	    inputfirm.setOption('readOnly', false);
+	}
+
         var do_next = function( mcode ) {
 			   inputfirm.setValue(mcode);
 			   inputfirm.refresh();
@@ -1241,9 +1250,9 @@
 		    label: 'Disable this tutorial',
 		    className: 'btn-danger col-xs-4 col-sm-3 pull-right',
 		    callback: function() {
-			set_cfg('show_tutorials', false) ;
+			set_cfg('ws_mode', 'wepsim') ;
                         save_cfg();
-                        $("#radio10-false").trigger("click").checkboxradio("refresh") ;
+			$("#select4").val('wepsim').selectmenu("refresh");
                         tutbox.modal("hide") ;
                         if (wepsim_voice_canSpeak())
 			    window.speechSynthesis.cancel() ;
@@ -1546,6 +1555,18 @@
      * Native microcode support
      */
 
+    function wepsim_show_webmips ( )
+    {
+	$("#tab26").hide() ;
+	$("#tab21").hide() ;
+    }
+
+    function wepsim_hide_webmips ( )
+    {
+	$("#tab26").show() ;
+	$("#tab21").show() ;
+    }
+
     function wepsim_native_get_value ( component, elto )
     {
         if ( ("CPU" == component) || ("BR" == component) )
@@ -1565,10 +1586,16 @@
             return ((MP[elto]) >>> 0) ;
         }
 
-        if ( ("SCREEN" == component) || ("KBD" == component) || ("IO" == component) )
+        if ("DEVICE" == component)
         {
             var associated_state = io_hash[elto] ;
             return (get_value(sim_states[associated_state]) >>> 0) ;
+        }
+
+        if ("SCREEN" == component)
+        {
+            set_screen_content(value) ;
+            return value ;
         }
 
         return false ;
@@ -1594,10 +1621,16 @@
             return value ;
         }
 
-        if ( ("SCREEN" == component) || ("KBD" == component) || ("IO" == component) )
+        if ("DEVICE" == component)
         {
             var associated_state = io_hash[elto] ;
             return set_value(sim_states[associated_state], value) ;
+        }
+
+        if ("SCREEN" == component)
+        {
+            var screen = get_screen_content() ;
+            return screen ;
         }
 
         return false ;
@@ -1630,28 +1663,35 @@
         return value ;
     }
 
+    function wepsim_native_deco ( )
+    {
+        compute_behavior('DECO') ;
+        show_asmdbg_pc() ;
+    }
+
     function wepsim_native_go_maddr ( maddr )
     {
-	// (A0=0, B=1, C=0) -> MUXA=10
-        set_value(sim_states["REG_MICROADDR"], maddr) ;
-        compute_behavior('FIRE B') ;
+        set_value(sim_states["MUXA_MICROADDR"], maddr) ;
     }
 
-    function wepsim_native_go_label ( mlabel )
+    function wepsim_native_go_opcode ( )
+    {
+	var maddr = get_value(sim_states['ROM_MUXA']) ;
+        set_value(sim_states["MUXA_MICROADDR"], maddr) ;
+    }
+
+    function wepsim_native_go_instruction ( signature_raw )
     {
         var SIMWARE = get_simware() ;
-        var maddr = SIMWARE.labels_firm[mlabel] ;
-        if (typeof maddr == "undefined")
-            return ;
 
-	// (A0=0, B=1, C=0) -> MUXA=10
-        set_value(sim_states["REG_MICROADDR"], maddr) ;
-        compute_behavior('FIRE B') ;
-    }
-
-    function wepsim_native_go_co ( )
-    {
-	// (A0, B=0, C=0) -> MUXA=01
-        compute_behavior('FIRE A0') ;
+        for (var key in SIMWARE.firmware) 
+        {
+             if (SIMWARE.firmware[key]["signatureRaw"] == signature_raw) 
+             {
+                 var maddr = SIMWARE.firmware[key]["mc-start"] ;
+                 set_value(sim_states["MUXA_MICROADDR"], maddr) ;
+                 return ;
+             }
+        }
     }
 
