@@ -127,14 +127,17 @@
 
 	function update_draw ( obj, value )
         {
-            if (true == DRAW_stop)
+            if (true == DRAW_stop) {
                 return ;
+	    }
+
+	    var draw_it = get_cfg('is_byvalue'); // 'is_byvalue' belongs to the sim_cfg.js
 
             /* 1) Check if draw it */
-	    var draw_it = get_cfg('is_byvalue'); // 'is_byvalue' belongs to the sim_cfg.js
 	    if (typeof sim_states["REG_MICROINS"].value[obj.name] != "undefined") {
 		draw_it = true;
 	    }
+
 	    if ( (false == draw_it) && (typeof obj.depends_on != "undefined") )
 	    {
 		for (var k=0; k<obj.depends_on.length; k++)
@@ -235,8 +238,7 @@
 
         function refresh()
         {
-	    for (var key in sim_signals)
-	    {
+	    for (var key in sim_signals) {
 		 update_draw(sim_signals[key], sim_signals[key].value) ;
 	    }
 
@@ -945,7 +947,12 @@
 		     }
 
 		     if ("NATIVE" == ks) {
-			 value += "&lt;built-in&gt;" ;
+			 value += "&lt;native&gt; " ;
+			 continue;
+		     }
+
+		     if ("NATIVE_JIT" == ks) {
+			 value += "&lt;built-in&gt; " ;
 			 continue;
 		     }
 

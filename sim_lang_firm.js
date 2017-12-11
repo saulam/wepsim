@@ -909,6 +909,29 @@ function loadFirmware (text)
 		}
 	   }
 
+	   // native -> native_jit
+	   var mk_native = "" ;
+	   for (var i=0; i<context.instrucciones.length; i++)
+	   {
+		   var ins = context.instrucciones[i] ;
+		   if (false == ins["native"]) {
+		       continue ;
+		   }
+
+		   for (var j=0; j<ins["microcode"].length; j++)
+		   {
+			if (typeof ins["microcode"][j].NATIVE != "undefined") 
+			{
+			    mk_native += "context.instrucciones[" + i + "][\"microcode\"][" + j + "][\"NATIVE_JIT\"] = " + 
+			                 " function() {\n" +
+					 "\t var fields = wepsim_native_get_fields(\"" + ins["signatureRaw"] + "\");\n" + 
+					     ins["microcode"][j].NATIVE + 
+					 "\n};\n " ;
+			}
+		   }
+	   }
+	   eval(mk_native) ;
+
            var ret = new Object();
            ret.error              = null;
            ret.firmware           = context.instrucciones ;

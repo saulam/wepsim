@@ -1338,7 +1338,7 @@
         return ret ;
     }
 
-    function wepsim_diff_results ( expected_result, obtained_result )
+    function wepsim_check_results ( expected_result, obtained_result, newones_too )
     {
         var d = new Object() ;
         d.result = new Array() ;
@@ -1393,7 +1393,7 @@
             }
 
 	    // if there are new elements -> diff
-	    if (typeof obtained_result[compo] != "undefined")
+	    if ((newones_too) && (typeof obtained_result[compo] != "undefined"))
 	    {
 		    for (var elto in obtained_result[compo]) 
 		    {
@@ -1420,6 +1420,11 @@
         }
 
         return d ;
+    }
+
+    function wepsim_diff_results ( expected_result, obtained_result )
+    {
+        return wepsim_check_results(expected_result, obtained_result, true) ;
     }
 
     function wepsim_checkreport2txt ( checklist )
@@ -1566,6 +1571,18 @@
     {
 	$("#tab26").show() ;
 	$("#tab21").show() ;
+    }
+
+    function wepsim_native_get_signal ( elto )
+    {
+        return (get_value(sim_signals[elto]) >>> 0) ;
+    }
+
+    function wepsim_native_set_signal ( elto, value )
+    {
+        set_value(sim_signals[elto], value) ;
+	compute_behavior("FIRE " + elto) ;
+	return value ;
     }
 
     function wepsim_native_get_value ( component, elto )
