@@ -1,42 +1,75 @@
+/*
+ *  Copyright 2015-2018 Felix Garcia Carballeira, Alejandro Calderon Mateos, Javier Prieto Cepeda, Saul Alonso Monsalve
+ *
+ *  This file is part of WepSIM.
+ *
+ *  WepSIM is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  WepSIM is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 
-// cache versioning
-var cacheName = 'v185b:static';
 
-// install
+/*
+ * cache versioning
+ */
+
+var cacheName = 'v187a:static';
+
+
+/*
+ * install
+ */
+
 self.addEventListener('install', 
 	              function(e) {
 			    e.waitUntil(
 				caches.open(cacheName).then(function(cache) {
 				    return cache.addAll([
                                         './wepsim_pwa.js',
-                                        './images/stop_pushpin.gif',
                                         './images/ajax-loader.gif',
                                         './images/reset.svg',
                                         './images/author_salonso.png',
                                         './images/processor6.svg',
                                         './images/monitor2.png',
-                                        './images/stop_r2d2.gif',
                                         './images/author_jprieto.png',
-                                        './images/stop_simple.gif',
-                                        './images/stop_super.gif',
                                         './images/author_acaldero.png',
-                                        './images/stop_sw.gif',
                                         './images/cfg-rf.gif',
                                         './images/controlunit6.svg',
                                         './images/keyboard1.png',
-                                        './images/stop_cat1.gif',
                                         './images/cfg-colors.gif',
                                         './images/fire.gif',
-                                        './images/stop_vader1.gif',
                                         './images/author_fgarcia.png',
-                                        './images/stop_batman.gif',
-                                        './images/stop_bb8.gif',
                                         './images/cpu6.svg',
-                                        './images/stop_dog1.gif',
                                         './images/arcos.svg',
-                                        './images/stop_classic.gif',
-                                        './docs/gpl.txt',
+					'./images/stop_classic.gif',
+					'./images/stop_simple.gif',
+					'./images/stop_pushpin.gif',
+					'./images/stop_cat1.gif',
+					'./images/stop_dog1.gif',
+					'./images/stop_super.gif',
+					'./images/stop_batman.gif',
+					'./images/stop_hp1.gif',
+					'./images/stop_hp2.gif',
+					'./images/stop_lotr1.gif',
+					'./images/stop_lotr2.gif',
+					'./images/stop_lotr3.gif',
+					'./images/stop_lotr4.gif',
+					'./images/stop_bb8.gif',
+					'./images/stop_r2d2.gif',
+					'./images/stop_sw.gif',
+					'./images/stop_vader1.gif',
                                         './docs/manifest.json',
+                                        './docs/gpl.txt',
                                         './docs/lgpl.txt',
                                         './examples/exampleMicrocodeS2E1.txt',
                                         './examples/exampleMicrocodeS2E2.txt',
@@ -75,6 +108,7 @@ self.addEventListener('install',
                                         './tutorials/welcome/simulation_xinstruction.gif',
                                         './tutorials/welcome/example_usage.gif',
                                         './help/about-es.html',
+                                        './help/about-en.html',
                                         './help/signals/props002.xml',
                                         './help/signals/image008.jpg',
                                         './help/signals/image008.png',
@@ -98,7 +132,9 @@ self.addEventListener('install',
                                         './help/signals/image006.jpg',
                                         './help/signals/header.html',
                                         './help/signals-en.html',
+                                        './help/signals-es.html',
                                         './help/simulator-en.html',
+                                        './help/simulator-es.html',
                                         './help/simulator/simulator002.jpg',
                                         './help/simulator/simulator016.jpg',
                                         './help/simulator/simulator017.jpg',
@@ -127,9 +163,6 @@ self.addEventListener('install',
                                         './help/simulator/simulator018.jpg',
                                         './help/simulator/firmware004.jpg',
                                         './help/simulator/firmware005.jpg',
-                                        './help/about-en.html',
-                                        './help/signals-es.html',
-                                        './help/simulator-es.html',
                                         './external/jquery.mobile-1.4.5.min.css',
                                         './external/jquery.min.js',
                                         './external/jquery-ui.min.js',
@@ -148,23 +181,13 @@ self.addEventListener('install',
 			    );
 });
 
-// fetch
+
+ /*
+  * fetch
+  */
+
 self.addEventListener('fetch', 
 	              function(event) {
-			    // on-line: try the fresh version
-                            if (navigator.onLine) {
-				return fetch(event.request);
-                            }
-
-			    event.respondWith(
-				caches.match(event.request).then(function(response) {
-				    // cache
-				    if (response) {
-					return response;
-				    }
-				    // on-line
-				    return fetch(event.request);
-				})
-			    );
-});
+			    event.respondWith(fetchURL(event.request)) ;
+                      });
 
