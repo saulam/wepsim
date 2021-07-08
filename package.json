@@ -1,14 +1,31 @@
 {
-  "name": "wepsim-travisci-jslint",
-  "description": "Check code with jshint",
-  "author": "acaldero",
-  "version": "0.0.5",
+  "name": "wepsim-travisci",
+  "description": "Check WepSIM",
+  "author": "acaldero@inf.uc3m.es",
+  "version": "1.2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/acaldero/wepsim.git"
+  },
+  "license": "GPL-3.0",
   "devDependencies": {
-    "jshint": "^2.6.0"
+    "jshint": "^2.12.0",
+    "terser": "^4.8.0"
   },
   "scripts": {
-    "test": "jshint sim_hw_board.js sim_hw_scr.js sim_hw_kbd.js sim_hw_mem.js sim_hw_io.js sim_lang.js sim_cfg.js sim_core.js examples/examples.js help/help-en.js help/help-es.js tutorials/simpleusage-en.js tutorials/simpleusage-es.js tutorials/tutorials.js tutorials/welcome-en.js tutorials/welcome-es.js wepsim_pwa.js wepsim_example.js wepsim_help.js wepsim_native.js wepsim_pwa.js wepsim_tutorial.js wepsim_url.js wepsim_voice.js"
+    "test-source1": "./devel/test_jshint.sh",
+    "test-wepsim-node1": "./devel/test_wepsim.sh co",
+    "test-wepsim-node2": "./devel/test_wepsim.sh rs"
   },
   "dependencies": {
+    "clear": "^0.1.0",
+    "fuzzy": "^0.1.3",
+    "inquirer": "^6.5.2",
+    "inquirer-autocomplete-prompt": "^1.0.2",
+    "inquirer-command-prompt": "0.0.29",
+    "readline-sync": "^1.4.10",
+    "vue": "^2.6.12",
+    "vuex": "^3.6.0",
+    "yargs": "^15.4.1"
   }
 }
