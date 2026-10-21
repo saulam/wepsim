@@ -1,60 +1,160 @@
-# WepSIM: Simulator of Elemental Processor 
+
+# WepSIM: Web Elemental Processor Simulator
+
+![Build Status](https://github.com/acaldero/wepsim/actions/workflows/ci-dist.yml/badge.svg)
+[![Maintainability](https://qlty.sh/gh/acaldero/projects/wepsim/maintainability.svg)](https://qlty.sh/gh/acaldero/projects/wepsim)
+[![DeepSource](https://app.deepsource.com/gh/acaldero/wepsim.svg/?label=resolved+issues&show_trend=false&token=Re_wpCMdTb3y7nP4XtfWeKIY)](https://app.deepsource.com/gh/acaldero/wepsim/)
+[![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
+[![Release](https://img.shields.io/badge/Stable-2.5.0-green.svg)](https://github.com/wepsim/wepsim/releases/tag/v2.5.0)
+
+<html>
+	<ul>
+	<table>
+		<tr align="center" cellpadding="2">
+		      <td> 📖 &nbsp;<br> <a href="https://wepsim.github.io/">WepSIM website</a> </td>
+		      <td> 📖 &nbsp;<br> <a href="https://wepsim.github.io/info/">WepSIM documentation</a> </td>
+		      <td> 🛠️ &nbsp;<br> <a href="https://wepsim.github.io/wepsim/">The WepSIM simulator</a> </td>
+		</tr>
+	</table>
+	</ul>
+</html>
+
+<details>
+<summary>More (click here)...</summary>
+
+<html>
+	<br>
+	<ul>
+	<table width="100%">
+		<tr>
+			<td width="33%">Getting Started</td>
+			<td width="33%">Teaching with WepSIM</td>
+			<td width="33%">Developers</td>
+		</tr>
+		<tr>		
+			<td valign="top">
+				<br>
+                <li> Getting WepSIM
+				<ul>
+				<li><a href="https://wepsim.github.io/info/web/getting-wepsim.html">Run WepSIM</a></li>
+				<li><a href="https://wepsim.github.io/info/web/getting-wepsim.html#2-install-wepsim-as-progressive-web-application-pwa">Install WepSIM as PWA</a></li>
+				</ul>
+                <li> Using WepSIM
+				<ul>			
+				<li><a href="https://wepsim.github.io/info/web/using-wepsim.html">Visual UI</a></li>
+				<li><a href="https://wepsim.github.io/info/command-line/using-wepsim-cl.html">Command Line</a></li>
+				</ul>
+				<br>
+			</td>
+			<td valign="top">
+				<br>
+                <li> Integrating WepSIM
+				<ul>
+				<li><a href="https://wepsim.github.io/info/integration/links.html">Links in documents</a></li>
+				<li><a href="https://wepsim.github.io/info/integration/gcolab.html">On Google Colab</a></li>
+				</ul>
+                <li> Automation and stats
+				<ul>
+				<li> <a href="https://github.com/wepsim/tester#readme">Command-line Tester</a> </li>
+				<li> <a href="https://lookerstudio.google.com/reporting/6c7aafbd-2c6b-4a86-91a2-3db55b03225a">Usage Statistics</a> </li>
+				</ul>
+				<br>
+			</td>
+			<td valign="top">
+				<br>
+                <li> Build with WepSIM
+				<ul>
+				<li><a href="https://wepsim.github.io/info/developer/mobile.html">WepSIM for Apache Cordova</a></li>
+				<li><a href="https://wepsim.github.io/info/developer/api_js.html">WepSIM engine API</a></li>
+				</ul>
+                <li> Contributing
+				<ul>
+				<li><a href="https://wepsim.github.io/info/developer/source_code.html">WepSIM Source Code</a></li>
+				<li><a href="https://wepsim.github.io/evolution/">WepSIM history</a>  </li>
+				</ul>
+				<br>
+			</td>
+		</tr>
+	</table>
+	</ul>
+</html>
+
+</details>
 
 
-[![Build Status](https://travis-ci.org/acaldero/wepsim.svg?branch=master)](https://travis-ci.org/acaldero/wepsim)
-[![Maintainability](https://api.codeclimate.com/v1/badges/9efc2957158b5c67f775/maintainability)](https://codeclimate.com/github/acaldero/wepsim/maintainability)
- [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
- 
+## Introduction
 
-+ WepSIM Simulator Source Code:
-
-   * https://github.com/acaldero/wepsim
-
-+ Get WepSIM Simulator:
-
-   * on-line => Web version (Google Chrome 50+, Mozilla Firefox 50+, Microsoft Edge 25+, and Apple Safari 10+):
-     * Release version: https://wepsim.github.io/wepsim
-     * Nightly build: https://acaldero.github.io/wepsim
-
-   * off-line => Install WepSIM:
-     * Install on Android 5.0+: <br/> 
-https://play.google.com/store/apps/details?id=es.uc3m.inf.arcos.wepsim
-
-     * Install WepSIM on iOS/Android as Progressive Web Application:
-
-       1 Once the https://acaldero.github.io/wepsim is loaded in Safari (iOS, MacOS) or Chrome (Android, Windows, Linux), from the top-right corner tap on the share icon (Safari) or the menu icon (Chrome). <br>
-       2 Move within share options until 'add to home screen' option and click on it. <br>
-       3 Then click in the 'add' option. <br>
-       4 Finally WepSIM can be launched from the home screen icon.
-
-Step   | iOS                       |  Android
-------:|:-------------------------:|:-------------------------:
-1    | ![screen:pwa_ios](https://raw.githubusercontent.com/acaldero/wepsim/master/docs/pwa/pwa_ios001.jpg) | ![screen:pwa_android](https://raw.githubusercontent.com/acaldero/wepsim/master/docs/pwa/pwa_android001.jpg)
-2    | ![screen:pwa_ios](https://raw.githubusercontent.com/acaldero/wepsim/master/docs/pwa/pwa_ios002.jpg) | ![screen:pwa_android](https://raw.githubusercontent.com/acaldero/wepsim/master/docs/pwa/pwa_android002.jpg)
-3    | ![screen:pwa_ios](https://raw.githubusercontent.com/acaldero/wepsim/master/docs/pwa/pwa_ios003.jpg) | ![screen:pwa_android](https://raw.githubusercontent.com/acaldero/wepsim/master/docs/pwa/pwa_android003.jpg)
-4    | ![screen:pwa_ios](https://raw.githubusercontent.com/acaldero/wepsim/master/docs/pwa/pwa_ios004.jpg) | ![screen:pwa_android](https://raw.githubusercontent.com/acaldero/wepsim/master/docs/pwa/pwa_android004.jpg)         
+* WepSIM can be used from the web at https://wepsim.github.io/wepsim and from [command-line](https://wepsim.github.io/info/command-line/getting-wepsim-cl.html).
+* It helps to get an integrated view of how hardware and software interact through microprogramming and assembly programming.
+* <a href="https://wepsim.github.io/wepsim/ws_dist/wepsim-classic.html?mode=ep&examples_set=Default-MIPS&example=8&simulator=assembly:screen">Interrupts</a>,
+  <a href="https://wepsim.github.io/wepsim/ws_dist/wepsim-classic.html?mode=ep&examples_set=Default-MIPS&example=10&simulator=assembly:screen">exceptions</a>,
+  <a href="https://wepsim.github.io/wepsim/ws_dist/wepsim-classic.html?mode=ep&examples_set=Default-MIPS&example=9&simulator=assembly:register_file">system calls</a>,
+  <a href="https://wepsim.github.io/wepsim/ws_dist/wepsim-classic.html?mode=ep&examples_set=Default-MIPS&example=19&simulator=assembly:screen">threads</a>,
+  etc., are included in the initial Examples. <br>
+  <br>
+  <html>
+  <img class="img-responsive mb-5 px-3"
+       src="https://raw.githubusercontent.com/wepsim/wepsim/master/images/welcome/simulation_xinstruction.gif"
+       style="max-height:55vh !important; max-width:90vw !important;"
+       alt="wepsim screenshot 2">
+  </html>
 
 
-+ Quick Start:
+## More information
 
-   1 From the menu, there are different examples available (click on the dark blue 'title' of the example you want to work with):
-     ![screen:example](https://raw.githubusercontent.com/wepsim/wepsim/master/help/simulator/simulator015.jpg)
-   2 Then you could go to the microcode editor workspace: 
-     ![screen:menu](https://raw.githubusercontent.com/wepsim/wepsim/master/help/simulator/firmware001.jpg)
-   3 You can modify the microcode (if you wish) and microcompile it: 
-     ![screen:microcode](https://raw.githubusercontent.com/wepsim/wepsim/master/help/simulator/firmware002.jpg)
-   4 Later, you could go to the assembly editor workspace: 
-     ![screen:menu](https://raw.githubusercontent.com/wepsim/wepsim/master/help/simulator/assembly002.jpg)
-   5 You can modify (if you wish) your assembly code (by using the instructions defined in the previous microcode) and compile it: 
-     ![screen:code](https://raw.githubusercontent.com/wepsim/wepsim/master/help/simulator/assembly003.jpg)
-   6 Finally, go back to the simulator workspace, and you can execute step by step and analyze the state of the components.
-     It is possible to work at assembly level or at microcode level: 
-     ![screen:simulation cpu](https://raw.githubusercontent.com/acaldero/wepsim/master/tutorials/welcome/simulation_xinstruction.gif)
-
-+ Main configuration options:
-
-   + From the menu, the configuration button let users to personalize several options:
-     ![screen:configuration](https://raw.githubusercontent.com/acaldero/wepsim/master/tutorials/welcome/config_usage.gif)
-   + From the simulator workspace, clicking over the 'processor button' shows/hides a slider to change the CPU/CU size:
-     ![screen:configuration](https://raw.githubusercontent.com/wepsim/wepsim/master/help/simulator/simulator013.jpg)
+<html>
+	<ul style="max-width:90vw !important;">
+	<table width="100%">
+		<tr>
+			<td width="33%">Getting Started</td>
+			<td width="33%">Teaching with WepSIM</td>
+			<td width="33%">Developers</td>
+		</tr>
+		<tr>		
+			<td valign="top">
+				<br>
+                <li> Getting WepSIM
+				<ul>
+				<li><a href="https://wepsim.github.io/info/web/getting-wepsim.html">Run WepSIM</a></li>
+				<li><a href="https://wepsim.github.io/info/web/getting-wepsim.html#2-install-wepsim-as-progressive-web-application-pwa">Install WepSIM as PWA</a></li>
+				</ul>
+                <li> Using WepSIM
+				<ul>			
+				<li><a href="https://wepsim.github.io/info/web/using-wepsim.html">Visual UI</a></li>
+				<li><a href="https://wepsim.github.io/info/command-line/using-wepsim-cl.html">Command Line</a></li>
+				</ul>
+				<br>
+			</td>
+			<td valign="top">
+				<br>
+                <li> Integrating WepSIM
+				<ul>
+				<li><a href="https://wepsim.github.io/info/integration/links.html">Links in documents</a></li>
+				<li><a href="https://wepsim.github.io/info/integration/gcolab.html">On Google Colab</a></li>
+				</ul>
+                <li> Automation and stats
+				<ul>
+				<li> <a href="https://github.com/wepsim/tester#readme">Command-line Tester</a> </li>
+				<li> <a href="https://lookerstudio.google.com/reporting/6c7aafbd-2c6b-4a86-91a2-3db55b03225a">Usage Statistics</a> </li>
+				</ul>
+				<br>
+			</td>
+			<td valign="top">
+				<br>
+                <li> Build with WepSIM
+				<ul>
+				<li><a href="https://wepsim.github.io/info/developer/mobile.html">WepSIM for Apache Cordova</a></li>
+				<li><a href="https://wepsim.github.io/info/developer/api_js.html">WepSIM engine API</a></li>
+				</ul>
+                <li> Contributing
+				<ul>
+				<li><a href="https://wepsim.github.io/info/developer/source_code.html">WepSIM Source Code</a></li>
+				<li><a href="https://wepsim.github.io/evolution/">WepSIM history</a>  </li>
+				</ul>
+				<br>
+			</td>
+		</tr>
+	</table>
+	</ul>
+</html>
 

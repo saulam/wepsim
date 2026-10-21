@@ -1,0 +1,4 @@
+node_modules/
+ws_dist/
+.vscode/
+wepsim-code-workspace.code-workspace
